@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        p {
+            margin: 1px auto;
+        }
+
+        .ch-sp {
+            opacity: 0;
+        }
+
+        .active {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="">
+        <label for="">英文：</label><input type="text" class="en" placeholder="请输入英文名词">；
+        <label for="">中文：</label><input type="text" class="ch" placeholder="请输入中文释义">
+        <button class="btn1">add</button>
+        <button class="btn2">clear</button>
+    </form>
+    <div class="outer"></div>
+    <script>
+        let wordsList = []
+
+        function addWordListener(p) {
+            p.querySelector('.en-sp').addEventListener('mousedown', () => {
+                p.querySelector('.ch-sp').classList.add('active')
+            });
+            p.querySelector('.en-sp').addEventListener('touchstart', () => {
+                p.querySelector('.ch-sp').classList.add('active')
+            });
+            p.querySelector('.en-sp').addEventListener('mouseup', () => {
+                p.querySelector('.ch-sp').classList.remove('active')
+            });
+            p.querySelector('.en-sp').addEventListener('touchend', () => {
+                p.querySelector('.ch-sp').classList.remove('active')
+            });
+        }
+
+        document.querySelector('.btn1').addEventListener('click', (e) => {
+            e.preventDefault();
+            const en = document.querySelector('.en').value.trim();
+            const ch = document.querySelector('.ch').value.trim();
+            if (en && ch) {
+                const exists = wordsList.some(item => item.querySelector('.en-sp').innerText === en && item.querySelector('.ch-sp').innerText === ch);
+                if (exists) {
+                    alert('已存在');
+                    return;
+                }
+
+                const p = document.createElement('p');
+                p.innerHTML = `英文: <span class='en-sp'>${en}</span> ; 中文: <span class='ch-sp'>${ch}</span>`;
+                document.querySelector('.outer').appendChild(p);
+                wordsList.push(p);
+                addWordListener(p);
+                document.querySelector('.en').value = '';
+                document.querySelector('.ch').value = '';
+            }
+        });
+
+        document.querySelector('.btn2').addEventListener('click', () => {
+            wordsList.forEach(item => {
+                item.remove();
+            });
+            wordsList = [];
+        });
+    </script>
+</body>
+
+</html>
